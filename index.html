@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="uz">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SHIFO KO'PRIGI Doctor</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">SK</div>
+          <div>
+            <strong>SHIFO KO'PRIGI</strong>
+            <span>Shifokor paneli</span>
+          </div>
+        </div>
+        <nav>
+          <button class="nav-item active">Qabullar</button>
+          <button class="nav-item">Video vizitlar</button>
+          <button class="nav-item">Bemorlar</button>
+        </nav>
+      </aside>
+
+      <main>
+        <header class="topbar">
+          <div>
+            <h1>Qabullar nazorati</h1>
+            <p>Hamshiralar kiritgan bemor holati va ko'rsatkichlari.</p>
+          </div>
+          <div class="connection" id="connectionStatus">Demo rejim</div>
+        </header>
+
+        <section class="stats-grid" aria-label="Statistika">
+          <div class="stat">
+            <span>Jami qabullar</span>
+            <strong id="totalCount">0</strong>
+          </div>
+          <div class="stat danger">
+            <span>Shoshilinch</span>
+            <strong id="urgentCount">0</strong>
+          </div>
+          <div class="stat">
+            <span>Video vizit</span>
+            <strong id="videoCount">0</strong>
+          </div>
+        </section>
+
+        <section class="workspace">
+          <div class="list-panel">
+            <div class="panel-head">
+              <h2>Bemorlar</h2>
+              <input id="searchInput" type="search" placeholder="Qidirish" />
+            </div>
+            <div id="encounterList" class="encounter-list"></div>
+          </div>
+
+          <article class="detail-panel" id="detailPanel">
+            <div class="empty-state">
+              <h2>Qabul tanlang</h2>
+              <p>Bemor holati, vitals, simptomlar va triage natijasi shu yerda ko'rinadi.</p>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+
+    <div class="login-overlay hidden" id="loginOverlay">
+      <form class="login-box" id="loginForm">
+        <h2>Shifokor kirishi</h2>
+        <p>Supabase Auth orqali email va parol bilan kiring.</p>
+        <label>
+          Email
+          <input id="emailInput" type="email" autocomplete="email" required />
+        </label>
+        <label>
+          Parol
+          <input id="passwordInput" type="password" autocomplete="current-password" required />
+        </label>
+        <button class="primary-button" type="submit">Kirish</button>
+        <div class="login-error" id="loginError"></div>
+      </form>
+    </div>
+
+    <template id="detailTemplate">
+      <div class="detail-header">
+        <div>
+          <span class="eyebrow">Bemor</span>
+          <h2 data-field="patientName"></h2>
+          <p data-field="patientMeta"></p>
+        </div>
+        <span class="risk-pill" data-field="riskLevel"></span>
+      </div>
+
+      <div class="section-grid">
+        <section>
+          <h3>Hamshira ma'lumotlari</h3>
+          <dl class="data-list">
+            <div><dt>Hamshira</dt><dd data-field="nurseName"></dd></div>
+            <div><dt>Qabul vaqti</dt><dd data-field="createdAt"></dd></div>
+            <div><dt>Holat</dt><dd data-field="status"></dd></div>
+          </dl>
+        </section>
+
+        <section>
+          <h3>Vitals</h3>
+          <div class="vitals-grid">
+            <div><span>Qon bosimi</span><strong data-field="bp"></strong></div>
+            <div><span>Puls</span><strong data-field="pulse"></strong></div>
+            <div><span>Harorat</span><strong data-field="temperature"></strong></div>
+            <div><span>SpO2</span><strong data-field="spo2"></strong></div>
+            <div><span>Glyukoza</span><strong data-field="glucose"></strong></div>
+          </div>
+        </section>
+      </div>
+
+      <section>
+        <h3>Simptomlar</h3>
+        <div class="symptom-list" data-field="symptoms"></div>
+      </section>
+
+      <section>
+        <h3>Triage natijasi</h3>
+        <p class="triage-note" data-field="triageNote"></p>
+        <dl class="data-list compact">
+          <div><dt>Yo'nalish</dt><dd data-field="department"></dd></div>
+          <div><dt>Qoida</dt><dd data-field="ruleId"></dd></div>
+        </dl>
+      </section>
+
+      <section class="video-card">
+        <div>
+          <h3>Video vizit</h3>
+          <p class="video-copy">Google Meet havolasini yarating va shu qabulga biriktiring.</p>
+          <input class="meet-input" data-field="meetUrlInput" type="url" placeholder="https://meet.google.com/..." />
+          <p class="video-message" data-field="videoMessage"></p>
+        </div>
+        <div class="video-actions">
+          <button class="secondary-button" data-action="createMeet">Meet yaratish</button>
+          <button class="primary-button" data-action="saveMeet">Havolani saqlash</button>
+          <button class="secondary-button" data-action="openMeet">Meet ochish</button>
+        </div>
+      </section>
+    </template>
+
+    <script src="./config.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
